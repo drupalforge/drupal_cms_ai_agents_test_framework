@@ -6,3 +6,6 @@ install:
   - login_destination
 config:
   strict: false
+  import:
+    ai_agents_test: '*'
+    login_destination: '*'
