@@ -1,60 +1,48 @@
-<h1>
-    <a href="https://www.drupalforge.org/">
-        <img src="drupalforge.svg" alt="Drupal Forge" height="100px" />
-    </a>
-</h1>
+# Drupal CMS
 
-This repository is a template for creating a Drupal Forge app from a Composer
-project. It performs a clean Drupal install with a default admin password of
-_admin_. __If you want to turn an existing Drupal Forge app into a template,
-you do not need this.__ The Composer project to create is specified by the
-`PROJECT` environment variable. If `PROJECT` is not defined, it defaults to
-[drupal/recommended-project](https://www.drupal.org/docs/develop/using-composer/starting-a-site-using-drupal-composer-project-templates#s-drupalrecommended-project).
-- You can set a different default value for `PROJECT` in
-  [.devpanel/composer_setup.sh](.devpanel/composer_setup.sh#L10).
-- To skip creating a project with Composer, add your own `composer.json` to the
-  repository root.
-- You can add the `.devpanel` directory from this repository to an existing
-  repository.
+Drupal CMS is a fast-moving open source product that enables site builders to easily create new Drupal sites and extend them with smart defaults, all using their browser.
 
-This repository is optimized for fast deployment with
-[DevPanel](https://www.devpanel.com). DevPanel deployment files are in the
-[`.devpanel`](.devpanel) directory. This repository is also configured to run
-locally using [DDEV](https://ddev.com).
+## Getting started
 
+If you want to use [DDEV](https://ddev.com) to run Drupal CMS locally, follow these instructions:
 
-## Publishing a quick start image
+1. Install DDEV following the [documentation](https://ddev.com/get-started/)
+2. Open the command line and `cd` to the root directory of this project
+3. Run the following commands:
+```shell
+ddev config --project-type=drupal11 --docroot=web
+ddev start
+ddev composer install
+ddev composer drupal:recipe-unpack
+ddev launch
+```
 
-For faster deployment, go to the [Actions](../../actions) tab in GitHub after
-you create a new repository from this template and add a workflow that
-pre-deploys your template in a Docker image, reducing the time needed to launch
-a site.
-- If your repository is in the Drupal Forge
-  [GitHub organization](https://github.com/drupalforge), the Drupal Forge
-  _Docker build and push template_ can set up the workflow for you. The
-  workflow will generate a new Docker image whenever a commit is pushed to the
-  `main` or `test/*` branches. Your images will be in the Drupal Forge
-  [Docker Hub account](https://hub.docker.com/u/drupalforge).
-- Otherwise, set up your own workflow with the
-  _[Drupal Forge Docker Publish](https://github.com/marketplace/actions/drupal-forge-docker-publish)_
-  action. It includes a reusable workflow you can call from your workflow. This
-  is how the reusable workflow is used in the Drupal Forge _Docker build and
-  push template_:
+Drupal CMS has the same system requirements as Drupal core, so you can use your preferred setup to run it locally. [See the Drupal User Guide for more information](https://www.drupal.org/docs/user_guide/en/installation-chapter.html) on how to set up Drupal.
 
-  ```yaml
-  name: Docker build and push template
-  on:
-    push:
-      branches:
-        - main
-        - test/*
-    workflow_dispatch:
-  jobs:
-    build-application:
-      uses: drupalforge/docker_publish_action/.github/workflows/docker-publish.yml@main
-      with:
-        dockerhub_username: ${{ vars.DOCKERHUB_USERNAME }}
-      secrets:
-        dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
-        dp_ai_virtual_key: ${{ secrets.DP_AI_VIRTUAL_KEY }}
-  ```
+### Installation options
+
+The Drupal CMS installer offers a list of features preconfigured with smart defaults. You will be able to customize whatever you choose, and add additional features, once you are logged in.
+
+After the installer is complete, you will land on the dashboard.
+
+## Documentation
+
+Coming soon ... [We're working on Drupal CMS specific documentation](https://www.drupal.org/project/drupal_cms/issues/3454527).
+
+In the meantime, learn more about managing a Drupal-based application in the [Drupal User Guide](https://www.drupal.org/docs/user_guide/en/index.html).
+
+## Contributing
+
+Drupal CMS is developed in the open on [Drupal.org](https://www.drupal.org). We are grateful to the community for reporting bugs and contributing fixes and improvements.
+
+[Report issues in the queue](https://drupal.org/node/add/project-issue/drupal_cms), providing as much detail as you can. You can also join the #drupal-cms-support channel in the [Drupal Slack community](https://www.drupal.org/slack).
+
+Drupal CMS has adopted a [code of conduct](https://www.drupal.org/dcoc) that we expect all participants to adhere to.
+
+To contribute to Drupal CMS development, see the [drupal_cms project](https://www.drupal.org/project/drupal_cms).
+
+## License
+
+Drupal CMS and all derivative works are licensed under the [GNU General Public License, version 2 or later](http://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+
+Learn about the [Drupal trademark and logo policy here](https://www.drupal.com/trademark).

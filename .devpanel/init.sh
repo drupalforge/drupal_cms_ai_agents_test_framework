@@ -40,8 +40,7 @@ else
   time source .devpanel/composer_setup.sh
   echo
 fi
-# If update fails, change it to install.
-time composer update -n --no-dev --no-progress
+time composer -n update --no-dev --no-progress
 
 #== Create the private files directory.
 if [ ! -d private ]; then
@@ -66,18 +65,56 @@ fi
 
 #== Install Drupal.
 echo
+NEWINSTALL=0
 if [ -z "$(drush status --field=db-status)" ]; then
   echo 'Install Drupal.'
   time drush -n si
+
+  #== Apply the AI recipe.
+  if [ -n "${DP_AI_VIRTUAL_KEY:-}" ]; then
+    echo
+    time drush -n en ai_provider_litellm
+    drush -n key-save litellm_api_key --label="LiteLLM API key" --key-provider=env --key-provider-settings='{
+      "env_variable": "DP_AI_VIRTUAL_KEY",
+      "base64_encoded": false,
+      "strip_line_breaks": true
+    }'
+    drush -n cset ai_provider_litellm.settings api_key litellm_api_key
+    drush -n cset ai_provider_litellm.settings moderation false --input-format yaml
+    drush -n cset ai_provider_litellm.settings host "${DP_AI_HOST:="https://ai.drupalforge.org"}"
+    drush -q recipe ../recipes/drupal_cms_ai --input=drupal_cms_ai.provider=litellm
+    drush -n cset ai.settings default_providers.chat.provider_id litellm
+    drush -n cset ai.settings default_providers.chat.model_id openai/gpt-4o-mini
+    drush -n cset ai.settings default_providers.chat_with_complex_json.provider_id litellm
+    drush -n cset ai.settings default_providers.chat_with_complex_json.model_id openai/gpt-4o-mini
+    drush -n cset ai.settings default_providers.chat_with_image_vision.provider_id litellm
+    drush -n cset ai.settings default_providers.chat_with_image_vision.model_id openai/gpt-4o-mini
+    drush -n cset ai.settings default_providers.chat_with_structured_response.provider_id litellm
+    drush -n cset ai.settings default_providers.chat_with_structured_response.model_id openai/gpt-4o-mini
+    drush -n cset ai.settings default_providers.chat_with_tools.provider_id litellm
+    drush -n cset ai.settings default_providers.chat_with_tools.model_id openai/gpt-4o-mini
+    drush -n cset ai.settings default_providers.embeddings.provider_id litellm
+    drush -n cset ai.settings default_providers.embeddings.model_id openai/text-embedding-3-small
+    drush -n cset ai.settings default_providers.text_to_speech.provider_id litellm
+    drush -n cset ai.settings default_providers.text_to_speech.model_id openai/gpt-4o-mini-realtime-preview
+    drush -n cset ai_assistant_api.ai_assistant.drupal_cms_assistant llm_provider __default__
+    drush -n cset klaro.klaro_app.deepchat status 0
+  fi
 
   echo
   echo 'Tell Automatic Updates about patches.'
   drush -n cset --input-format=yaml package_manager.settings additional_trusted_composer_plugins '["cweagans/composer-patches"]'
   drush -n cset --input-format=yaml package_manager.settings additional_known_files_in_project_root '["patches.json", "patches.lock.json"]'
   time drush ev '\Drupal::moduleHandler()->invoke("automatic_updates", "modules_installed", [[], FALSE])'
+  NEWINSTALL=1
 else
   echo 'Update database.'
   time drush -n updb
+fi
+
+#== Apply the recipe logic if its a new install.
+if [ $NEWINSTALL -eq 1 ]; then
+  source .devpanel/recipe_logic.sh
 fi
 
 #== Warm up caches.
@@ -86,7 +123,7 @@ echo 'Run cron.'
 time drush cron
 echo
 echo 'Populate caches.'
-time drush cache:warm &> /dev/null || :
+time drush cache:warm
 time .devpanel/warm
 
 #== Finish measuring script time.

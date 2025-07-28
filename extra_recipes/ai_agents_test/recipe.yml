@@ -1,0 +1,8 @@
+name: AI Agents Test Framework
+type: Drupal CMS
+description: A Drupal CMS framework for testing AI agents.
+install:
+  - ai_agents_test
+  - login_destination
+config:
+  strict: false
