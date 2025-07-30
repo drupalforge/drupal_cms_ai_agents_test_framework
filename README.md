@@ -1,4 +1,4 @@
-# Drupal CMS
+# Drupal CMS with Testing
 
 Drupal CMS is a fast-moving open source product that enables site builders to easily create new Drupal sites and extend them with smart defaults, all using their browser.
 
@@ -18,6 +18,8 @@ ddev launch
 ```
 
 Drupal CMS has the same system requirements as Drupal core, so you can use your preferred setup to run it locally. [See the Drupal User Guide for more information](https://www.drupal.org/docs/user_guide/en/installation-chapter.html) on how to set up Drupal.
+
+This has testing inside it as well.
 
 ### Installation options
 
