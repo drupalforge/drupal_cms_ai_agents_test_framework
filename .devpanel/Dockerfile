@@ -1,4 +1,4 @@
 USER root
-RUN composer selfupdate -n
+RUN COMPOSER_HOME=/root/.config/composer composer selfupdate -n
 USER ${USER}
 ENV COMPOSER_HOME="${HOME}/.config/composer"
