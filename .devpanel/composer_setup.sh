@@ -217,7 +217,6 @@ composer require -n --no-update \
     codemirror/codemirror \
     cweagans/composer-patches:^2@beta \
     drupal/ai_provider_litellm:@beta \
-    drush/drush:^13 \
     jquery/inputmask \
     jquery/intl-tel-input \
     jquery/rateit \
