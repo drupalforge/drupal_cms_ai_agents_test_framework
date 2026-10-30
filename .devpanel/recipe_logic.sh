@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-drush cr
-
 # Change minimum stability in composer.json to allow dev packages.
 if [ -f composer.json ]; then
   composer config minimum-stability dev
@@ -11,6 +9,8 @@ fi
 echo
 echo 'Get the ai_agents_test and login_destination modules.'
 time composer require drupal/ai_agents_test:^1.0@alpha drupal/login_destination:^2.0@beta
+
+drush cr
 
 #== Install the ai_agents_test recipe.
 cp -r extra_recipes/ai_agents_test recipes
